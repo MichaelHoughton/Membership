@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class UsersController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -25,6 +25,6 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
-        return view('home', compact('user'));
+        return view('users.index', compact('user'));
     }
 }

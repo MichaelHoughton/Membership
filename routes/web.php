@@ -17,4 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'UsersController@index')->name('home');
+
+Route::get('/subscribe', 'SubscriptionsController@index')->name('subscriptions.index');
+Route::post('/subscribe', 'SubscriptionsController@store')->name('subscriptions.store');

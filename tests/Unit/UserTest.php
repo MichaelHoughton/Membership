@@ -12,7 +12,9 @@ class UserTest extends TestCase
         // our non subscribed user isn't a member
         $this->assertFalse($this->user->isMember());
 
+        $subscribed = $this->subscribedUser();
+
         // our subscribed user is a member
-        $this->assertTrue($this->subscribed->isMember());
+        $this->assertTrue($subscribed->isMember());
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Tests\TestCase;
 
 class UsersTest extends TestCase
@@ -27,7 +28,9 @@ class UsersTest extends TestCase
     /** @test */
     public function a_subscribed_user_views_the_dashboard()
     {
-        $this->actingAs($this->subscribed)
+        $subscribed = $this->subscribedUser();
+
+        $this->actingAs($subscribed)
             ->get('/home')
             ->assertStatus(200)
             ->assertSee('You are currently subscribed to our membership.');
