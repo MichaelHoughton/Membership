@@ -17,4 +17,9 @@ class UserTest extends TestCase
         // our subscribed user is a member
         $this->assertTrue($subscribed->isMember());
     }
+
+    public function testSubscriptionExpiry()
+    {
+        $this->markTestIncomplete();
+    }
 }

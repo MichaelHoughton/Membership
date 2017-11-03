@@ -21,3 +21,5 @@ Route::get('/home', 'UsersController@index')->name('home');
 
 Route::get('/subscribe', 'SubscriptionsController@index')->name('subscriptions.index');
 Route::post('/subscribe', 'SubscriptionsController@store')->name('subscriptions.store');
+
+Route::get('/cancel-subscription', 'SubscriptionsController@destroy')->name('subscriptions.destroy');

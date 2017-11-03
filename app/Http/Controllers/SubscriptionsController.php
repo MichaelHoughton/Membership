@@ -22,7 +22,9 @@ class SubscriptionsController extends Controller
         $user = auth()->user();
 
         if ($user->isMember()) {
-            return view('subscriptions.index', compact('user'));
+            $subscription = $user->subscription(config('app.membership_name'));
+
+            return view('subscriptions.index', compact('user', 'subscription'));
         }
 
         return view('subscriptions.create', compact('user'));
@@ -30,6 +32,10 @@ class SubscriptionsController extends Controller
 
     public function store(SubscriptionsRequest $request)
     {
+        if (auth()->user()->isMember()) {
+            abort(403, 'You don\'t have permission to access this page.');
+        }
+
         if (!$request->subscribe(auth()->user())) {
             session()->flash('error', 'There was a problem with the credit card. Please review the credit card details and try again.');
 
@@ -39,6 +45,18 @@ class SubscriptionsController extends Controller
         }
 
         session()->flash('success', 'Your payment was successful and you have successfully subscribed!');
+        return redirect()->route('subscriptions.index');
+    }
+
+    public function destroy()
+    {
+        if (!auth()->user()->isMember()) {
+            abort(403, 'You don\'t have permission to access this page.');
+        }
+
+        auth()->user()->subscription(config('app.membership_name'))->cancel();
+
+        session()->flash('success', 'Your subscription was successfully cancelled.');
         return redirect()->route('subscriptions.index');
     }
 }

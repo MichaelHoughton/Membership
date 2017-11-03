@@ -69,4 +69,28 @@ class SubscriptionsTest extends TestCase
             ->assertSessionHas('success')
             ->assertRedirect('/subscribe');
     }
+
+    /** @test */
+    public function a_non_subscribed_user_tries_to_cancels_their_subscription()
+    {
+        $this->withExceptionHandling()
+            ->actingAs($this->user)
+            ->get('/cancel-subscription')
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function a_subscribed_user_cancels_their_subscription()
+    {
+        $subscribed = $this->subscribedUser();
+
+        $this->actingAs($subscribed)
+            ->get('/cancel-subscription')
+            ->assertStatus(302)
+            ->assertSessionHas('success')
+            ->assertRedirect('/subscribe');
+
+        $subscription = $subscribed->subscription(config('app.membership_name'));
+        $this->assertNotNull($subscription->ends_at);
+    }
 }
