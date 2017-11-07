@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Event;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -25,6 +26,11 @@ class UsersController extends Controller
     {
         $user = auth()->user();
 
-        return view('users.index', compact('user'));
+        $events = Event::future()
+            ->get();
+
+        return view('users.index', compact(
+            'user', 'events'
+        ));
     }
 }

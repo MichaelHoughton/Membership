@@ -11,15 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'EventsController@index')->name('events.index');
 
 Auth::routes();
 
 Route::get('/home', 'UsersController@index')->name('home');
 
+Route::get('/cancel-subscription', 'SubscriptionsController@destroy')->name('subscriptions.destroy');
+
+Route::get('/event/{slug}', 'EventsController@show')->name('events.show');
+
 Route::get('/subscribe', 'SubscriptionsController@index')->name('subscriptions.index');
 Route::post('/subscribe', 'SubscriptionsController@store')->name('subscriptions.store');
-
-Route::get('/cancel-subscription', 'SubscriptionsController@destroy')->name('subscriptions.destroy');
