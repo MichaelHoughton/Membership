@@ -80,6 +80,8 @@
             </div>
         @endif
 
+        @include('partials.errors')
+
         @yield('content')
     </div>
 

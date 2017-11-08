@@ -65,8 +65,23 @@
 
                 <div class="panel-body">
                     @auth
-                        {!! Form::open(['url' => '/event/' . $event->id]) !!}
-                            @include('partials.payment_form')
+                        {!! Form::open([
+                            'url' => '/booking/create',
+                            'method' => 'GET'
+                        ]) !!}
+                            {{ Form::hidden('event_id', $event->id) }}
+
+                            @php
+                                $options = [
+                                    1 => 1,
+                                    2 => 2,
+                                    3 => 3,
+                                    4 => 4,
+                                    5 => 5,
+                                ];
+                            @endphp
+
+                            {!! BootForm::select('guests', 'Please confirm the number of guests (including yourself)', $options) !!}
 
                             {!! BootForm::submit('Book a Place') !!}
                         {!! Form::close() !!}

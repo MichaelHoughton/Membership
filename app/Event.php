@@ -10,6 +10,11 @@ class Event extends Model
         'date'
     ];
 
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
     public function scopeFuture($query)
     {
         return $query->where('date', '>=', now()->format('Y-m-d'));

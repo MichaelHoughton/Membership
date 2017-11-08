@@ -59,12 +59,6 @@ class EventsTest extends TestCase
         $this->actingAs($this->user)
             ->get('/event/' . $this->event->slug)
             ->assertStatus(200)
-            ->assertSee('Card Number');
-    }
-
-    /** @test */
-    public function a_user_books_an_event()
-    {
-        $this->markTestIncomplete();
+            ->assertSee('Please confirm the number of guests (including yourself)');
     }
 }

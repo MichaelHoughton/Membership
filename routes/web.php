@@ -17,6 +17,9 @@ Auth::routes();
 
 Route::get('/home', 'UsersController@index')->name('home');
 
+Route::get('/booking/create', 'BookingsController@create')->name('bookings.create');
+Route::post('/booking', 'BookingsController@store')->name('bookings.store');
+
 Route::get('/cancel-subscription', 'SubscriptionsController@destroy')->name('subscriptions.destroy');
 
 Route::get('/event/{slug}', 'EventsController@show')->name('events.show');
