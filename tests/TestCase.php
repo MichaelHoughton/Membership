@@ -19,6 +19,10 @@ abstract class TestCase extends BaseTestCase
 
         $this->user = factory(User::class)->create();
 
+        $this->admin = factory(User::class)->create([
+            'admin' => true
+        ]);
+
         $this->paymentAttributes = [
             'card_number' => 4242424242424242,
             'exp_month' => '01',

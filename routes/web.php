@@ -26,3 +26,10 @@ Route::get('/event/{slug}', 'EventsController@show')->name('events.show');
 
 Route::get('/subscribe', 'SubscriptionsController@index')->name('subscriptions.index');
 Route::post('/subscribe', 'SubscriptionsController@store')->name('subscriptions.store');
+
+Route::group(['prefix' => 'admin', 'middleware' => 'adminOnly'], function() {
+    Route::resource('events', 'Admin\EventsController', [
+        'except' => 'show',
+        'as'     => 'admin'
+    ]);
+});
