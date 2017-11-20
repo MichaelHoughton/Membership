@@ -90,11 +90,7 @@
             </div>
         </nav>
 
-        @if (session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
-            </div>
-        @endif
+        @include('partials.flash')
 
         @include('partials.errors')
 

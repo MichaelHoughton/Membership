@@ -15,26 +15,36 @@
                     </p>
 
                     {!! Form::open(['url' => '/booking']) !!}
+                        {{ Form::hidden('event_id', $event->id) }}
 
-                    {{ Form::hidden('event_id', $event->id) }}
-
-                    @php
-                        $i = 1;
-                    @endphp
-
-                    @while ($i <= $guests)
-                        {!! BootForm::text('guest[' . $i .'][name]', 'Guest Name ' . $i) !!}
-
-                        {!! BootForm::text('guest[' . $i .'][email]', 'Guest Email Address ' . $i) !!}
-
-                        <hr>
                         @php
-                            $i++;
+                            $i = 1;
                         @endphp
-                    @endwhile
-                        <h3>Payment Details</h3>
 
-                        @include('partials.payment_form')
+                        @while ($i <= $guests)
+                            {!! BootForm::text('guest[' . $i .'][name]', 'Guest Name ' . $i) !!}
+
+                            {!! BootForm::text('guest[' . $i .'][email]', 'Guest Email Address ' . $i) !!}
+
+                            <hr>
+                            @php
+                                $i++;
+                            @endphp
+                        @endwhile
+
+                        <h3>Total Due</h3>
+
+                        @php
+                            $totalPrice = $event->totalPrice($guests, auth()->user()->isMember());
+                        @endphp
+
+                        <p>${{ $totalPrice }}</p>
+
+                        @if ($totalPrice > 0)
+                            <h3>Payment Details</h3>
+
+                            @include('partials.payment_form')
+                        @endif
 
                         {!! BootForm::submit('Confirm Booking') !!}
                     {!! Form::close() !!}

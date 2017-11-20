@@ -27,13 +27,20 @@ class BookingsRequest extends FormRequest
     {
         $rules = [
             'event_id' => 'required',
-            'card_number' => 'required|ccn',
-            'exp_month' => 'required',
-            'exp_year' => 'required',
-            'cvc' => 'required|numeric',
         ];
 
         $guests = count($this->guest);
+
+        $event = Event::findOrFail($this->event_id);
+
+        if ($event->totalPrice($guests, auth()->user()->isMember()) > 0) {
+            $rules += [
+                'card_number' => 'required|ccn',
+                'exp_month' => 'required',
+                'exp_year' => 'required',
+                'cvc' => 'required|numeric',
+            ];
+        }
 
         $i = 1;
         while ($i <= $guests) {
@@ -79,31 +86,33 @@ class BookingsRequest extends FormRequest
      */
     public function chargeAndBook(User $user, Event $event)
     {
-        $token = $user->generateToken([
-            'cardNumber' => $this->card_number,
-            'expiryMonth' => $this->exp_month,
-            'expiryYear' => $this->exp_year,
-            'cvc' => $this->cvc,
-        ]);
+        $totalPrice = $event->totalPrice(count($this->guest), $user->isMember());
 
-        if ($token['status'] == 'error') {
-            return false;
-        }
+        if ($totalPrice > 0) {
+            $token = $user->generateToken([
+                'cardNumber' => $this->card_number,
+                'expiryMonth' => $this->exp_month,
+                'expiryYear' => $this->exp_year,
+                'cvc' => $this->cvc,
+            ]);
 
-        //TO-DO Update the charge amount
-        $charge = $user->charge(100, [
-            'source' => $token['token']
-        ]);
+            if ($token['status'] == 'error') {
+                return false;
+            }
 
-        if (!$charge || empty($charge->id)) {
-            return false;
+            $charge = $user->charge($totalPrice * 100, [
+                'source' => $token['token']
+            ]);
+
+            if (!$charge || empty($charge->id)) {
+                return false;
+            }
         }
 
         $result = [];
         foreach ($this->guest as $guest) {
             $result[] = $event->bookings()
                 ->create($guest);
-
         }
 
         return $result;

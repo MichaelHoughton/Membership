@@ -51,12 +51,11 @@ class BookingsController extends Controller
         if (!$request->chargeAndBook(auth()->user(), $event)) {
             session()->flash('error', 'There was a problem with the credit card. Please review the credit card details and try again.');
 
-            return redirect()
-                ->route('bookings.create')
+            return back()
                 ->withInput($request->all());
         }
 
-        session()->flash('success', 'Your payment was successful and you have successfully booked for this event!');
+        session()->flash('success', 'You have successfully booked for this event!');
         return redirect()->route('home');
     }
 }
