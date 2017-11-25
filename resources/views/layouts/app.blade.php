@@ -56,6 +56,7 @@
                                     <li>
                                         <a href="/admin/events">Events</a>
                                         <a href="/admin/events/create">Create Event</a>
+                                        <a href="/admin/bookings">Bookings</a>
                                         <a href="/admin/payments">Payments</a>
                                         <a href="/admin/users">Users</a>
                                     </li>

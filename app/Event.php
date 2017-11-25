@@ -10,14 +10,88 @@ class Event extends Model
         'date'
     ];
 
+    protected $fillable = [
+        'title',
+        'slug',
+        'brief',
+        'description',
+        'venue',
+        'location',
+        'date',
+        'start_time',
+        'end_time',
+        'public_price',
+        'member_price',
+    ];
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);
     }
 
+    /**
+     * Formats the the endTime field
+     *
+     * @param  time $value
+     * @return mixed null or string
+     */
+    public function getEndTimeAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+
+        return substr($value, 0, 5);
+    }
+
+    /**
+     * Formats the the startTime field
+     *
+     * @param  time $value
+     * @return mixed null or string
+     */
+    public function getStartTimeAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+
+        return substr($value, 0, 5);
+    }
+
     public function scopeFuture($query)
     {
         return $query->where('date', '>=', now()->format('Y-m-d'));
+    }
+
+    /**
+     * Formats the endTime field for saving
+     *
+     * @param  string $value
+     * @return void
+     */
+    public function setEndTimeAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['end_time'] = $value . ':00';
+        } else {
+            $this->attributes['end_time'] = null;
+        }
+    }
+
+    /**
+     * Formats the startTime field for saving
+     *
+     * @param  string $value
+     * @return void
+     */
+    public function setStartTimeAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['start_time'] = $value . ':00';
+        } else {
+            $this->attributes['start_time'] = null;
+        }
     }
 
     /**

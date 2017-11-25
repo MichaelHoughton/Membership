@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Event;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EventsRequest;
 
 class EventsController extends Controller
 {
@@ -37,32 +38,38 @@ class EventsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EventsRequest $request)
     {
-        //
+        Event::create($request->all());
+
+        session()->flash('success', 'The event was successfully created!');
+        return redirect()->route('admin.events.index');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Event $event
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Event $event)
     {
-        //
+        return view('admin.events.form', compact('event'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\EventsRequest  $request
+     * @param  \App\Event $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EventsRequest $request, Event $event)
     {
-        //
+        $event->fillable($request->all())->save();
+
+        session()->flash('success', 'The event was successfully updated!');
+        return redirect()->route('admin.events.index');
     }
 
     /**

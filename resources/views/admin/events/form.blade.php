@@ -1,7 +1,7 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @php
-    $title = !empty($event) ? 'Update Event Details' : 'Create Event';
+    $title = !empty($event) ? 'Update Event Details' : 'Create an Event';
 @endphp
 
 @section('title', 'Admin - ' . $title)
@@ -25,8 +25,9 @@
                         {!! Form::open(['route' => 'admin.events.store'])
                         !!}
                     @endif
-
                         {!! BootForm::text('title') !!}
+
+                        {!! BootForm::text('slug') !!}
 
                         {!! BootForm::textarea('brief') !!}
 
@@ -42,10 +43,14 @@
 
                         {!! BootForm::text('end_time') !!}
 
+                        {!! BootForm::number('public_price') !!}
+
+                        {!! BootForm::number('member_price') !!}
+
                         @if (!empty($event))
                             {!! BootForm::submit('Save Changes') !!}
                         @else
-                            {!! BootForm::submit('Add Event') !!}
+                            {!! BootForm::submit('Create Event') !!}
                         @endif
 
                         @if (!empty($event))
@@ -61,5 +66,5 @@
 @endsection
 
 @section('scripts')
-    @include('partials.datepicker')
+
 @append

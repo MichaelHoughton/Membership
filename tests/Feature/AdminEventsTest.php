@@ -39,60 +39,69 @@ class AdminEventsTest extends TestCase
     /** @test */
     public function display_create_a_broker_page()
     {
-        $this->withSession(['roleCodes' => ['superadmin']])
-            ->get('/admin/brokers/create')
-            ->assertStatus(200);
+        $this->actingAs($this->admin)
+            ->get('/admin/events/create')
+            ->assertStatus(200)
+            ->assertSee('Title');
     }
 
     /** @test */
-    public function validates_required_broker_fields()
+    public function validates_required_fields_for_event()
     {
-        $requiredFields = [
-            'brokerName',
-            'brokerAFSL'
+        $fields = [
+            'title',
+            'slug',
+            'brief',
+            'description',
+            'venue',
+            'date',
+            'start_time',
+            'public_price',
         ];
 
-        foreach ($requiredFields as $field) {
-            $attributes = $this->attributes('Broker', [$field => null]);
-
-            $this->withExceptionHandling()
-                ->withSession(['roleCodes' => ['superadmin']])
-                ->post('admin/brokers', $attributes)
-                ->assertStatus(302)
-                ->assertSessionHasErrors($field);
+        $attributes = factory(Event::class)->raw();
+        foreach ($fields as $field) {
+            $attributes[$field] = null;
         }
+
+        $this->withExceptionHandling()
+            ->actingAs($this->admin)
+            ->post('admin/events', $attributes)
+            ->assertStatus(302)
+            ->assertSessionHasErrors($fields);
     }
 
     /** @test */
-    public function create_a_broker()
+    public function create_an_event()
     {
-        $attributes = $this->attributes('Broker');
+        $attributes = factory(Event::class)->raw();
 
-        $this->withSession(['roleCodes' => ['superadmin']])
-            ->post('admin/brokers', $attributes)
+        $this->actingAs($this->admin)
+            ->post('admin/events', $attributes)
             ->assertSessionHas('success')
-            ->assertRedirect('/admin/brokers');
+            ->assertRedirect('/admin/events');
     }
 
     /** @test */
-    public function display_edit_a_broker_page()
+    public function display_edit_event_page()
     {
-        $broker = $this->create('Broker');
+        $event = factory(Event::class)->create();
 
-        $this->withSession(['roleCodes' => ['superadmin']])
-            ->get('/admin/brokers/' . $broker->brokerID . '/edit')
-            ->assertStatus(200);
+        $this->actingAs($this->admin)
+            ->get('/admin/events/'.$event->id . '/edit')
+            ->assertStatus(200)
+            ->assertSee(e($event->title));
     }
 
     /** @test */
-    public function update_a_broker()
+    public function update_an_event()
     {
-        $broker = $this->create('Broker');
-        $attributes = $this->attributes('Broker');
+        $event = factory(Event::class)->create();
+        $attributes = factory(Event::class)->raw();
 
-        $this->withSession(['roleCodes' => ['superadmin']])
-            ->patch('admin/brokers/' . $broker->brokerID, $attributes)
+        $this->actingAs($this->admin)
+            ->patch('/admin/events/'.$event->id, $attributes)
             ->assertSessionHas('success')
-            ->assertRedirect('/admin/brokers');
+            ->assertRedirect('/admin/events');
     }
 }

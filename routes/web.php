@@ -28,8 +28,14 @@ Route::get('/subscribe', 'SubscriptionsController@index')->name('subscriptions.i
 Route::post('/subscribe', 'SubscriptionsController@store')->name('subscriptions.store');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'adminOnly'], function() {
+    Route::get('bookings', 'Admin\BookingsController@index')->name('admin.bookings.index');
+
     Route::resource('events', 'Admin\EventsController', [
         'except' => 'show',
         'as'     => 'admin'
     ]);
+
+    Route::get('payments', 'Admin\PaymentsController@index')->name('admin.payments.index');
+
+    Route::get('users', 'Admin\UsersController@index')->name('admin.users.index');
 });

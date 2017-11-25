@@ -37,7 +37,7 @@
                                     <td class="text-center">
                                         <a href="/admin/events/{{ $event->id }}/edit">Edit</a> /
                                         <a href="/admin/bookings?event_id={{ $event->id }}">Bookings</a> /
-                                        <a href="/admin/payments?event_id={{ $event->id }}">Payments</a> /
+                                        <a href="/admin/payments?event_id={{ $event->id }}">Payments</a>
 
                                     </td>
                                 </tr>
